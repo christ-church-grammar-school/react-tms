@@ -10,3 +10,14 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Hyperlinks */
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover {
+  opacity: 0.8;
+}

@@ -1,0 +1,50 @@
+.form-btn {
+  background-color: #262b91;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  display: block;
+  float: right;
+  font-size: 15px;
+  padding: 7px;
+}
+
+.form-group {
+  border: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.form-input {
+  background-color: #ebf2ff;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: black;
+  font-size: 20px;
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+}
+
+.form-main {
+  border: none;
+  margin: auto;
+  padding: none;
+}
+
+.Login {
+  box-sizing: border-box;
+  margin: auto;
+  width: 45ex;
+}
+
+.Login h1 {
+  margin: 1ex;
+}
