@@ -23,7 +23,6 @@ class Login extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log(this.state);
     event.preventDefault();
     // TODO(maxgodfrey2004): Implement this function (use props?)
   }
