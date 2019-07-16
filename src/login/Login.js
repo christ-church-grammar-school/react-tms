@@ -2,7 +2,29 @@ import React from 'react';
 import './Login.css';
 
 class Login extends React.Component {
-  submitForm() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+    };
+
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleUsernameChange(event) {
+    this.setState({username: event.target.value});
+  }
+
+  handlePasswordChange(event) {
+    this.setState({password: event.target.value});
+  }
+
+  handleSubmit(event) {
+    console.log(this.state);
+    event.preventDefault();
     // TODO(maxgodfrey2004): Implement this function (use props?)
   }
 
@@ -10,17 +32,17 @@ class Login extends React.Component {
     return (
       <div className="Login">
         <h1>Log in</h1>
-        <form className="form-main" onSubmit={this.submitForm}>
+        <form className="form-main" onSubmit={this.handleSubmit}>
           <fieldset className="form-group">
-            <input class="form-input"
-                   formControlName="username"
+            <input className="form-input"
+                   onChange={this.handleUsernameChange}
                    placeholder="Username"
                    type="text" />
-            <input class="form-input"
-                   formControlName="password"
+            <input className="form-input"
+                   onChange={this.handlePasswordChange}
                    placeholder="Password"
                    type="password" />
-            <button class="form-btn" type="submit">
+            <button className="form-btn" type="submit">
               Log in
             </button>
           </fieldset>
