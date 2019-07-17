@@ -1,0 +1,23 @@
+/* Global Styles */
+
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+
+* {
+  box-sizing: border-box;
+  color: #616161;
+  font-family: 'Roboto Mono', monospace, Arial, sans-serif;
+  margin: 0;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hyperlinks */
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover {
+  opacity: 0.8;
+}
