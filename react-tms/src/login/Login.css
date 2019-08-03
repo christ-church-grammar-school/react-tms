@@ -10,10 +10,26 @@
   -webkit-box-sizing: border-box;
 }
 
+.auth-fail button {
+  background-color: #ff6969;
+  border: 1px solid #ff6969;
+  border-radius: 5px;
+  color: #fce8e8;
+  display: inline-block;
+  float: right;
+  font-size: 15px;
+  margin: 0.1em;
+  text-align: center;
+}
+
+.auth-fail button:hover {
+  opacity: 0.8;
+}
+
 .auth-fail p {
   color: #ff6969;
+  display: inline-block;
   font-size: 20px;
-  text-align: center;
 }
 
 .form-btn {
