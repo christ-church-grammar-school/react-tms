@@ -1,0 +1,3 @@
+# For security reasons, we are not going to commit the file which contains
+# the Firebase configuration.
+firebase_config.js
