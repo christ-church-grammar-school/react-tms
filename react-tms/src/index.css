@@ -21,3 +21,9 @@ a {
 a:hover {
   opacity: 0.8;
 }
+
+/* Buttons */
+
+button:hover {
+  cursor: pointer;
+}
