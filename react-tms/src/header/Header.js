@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import LogoutButton from '../logout/Logout.js';
 import './Header.css';
 
 const Header = ({ authUser }) => (
@@ -11,6 +13,7 @@ const HeaderAuthorized = () => (
     <Link to="/">
       <h1>react-tms</h1>
     </Link>
+    <LogoutButton />
   </nav>
 )
 
