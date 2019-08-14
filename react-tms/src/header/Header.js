@@ -3,9 +3,16 @@ import { Link } from 'react-router-dom';
 
 import LogoutButton from '../logout/Logout.js';
 import './Header.css';
+import { AuthUserContext } from '../Session/index.js';
 
 const Header = ({ authUser }) => (
-  <div>{authUser ? <HeaderAuthorized /> : <HeaderUnauthorized />}</div>
+  <div>
+    <AuthUserContext.Consumer>
+      {authUser =>
+        authUser ? <HeaderAuthorized /> : <HeaderUnauthorized />
+      }
+    </AuthUserContext.Consumer>
+  </div>
 )
 
 const HeaderAuthorized = () => (
