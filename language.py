@@ -67,13 +67,16 @@ def run_tests(filename, dirname):
            'Disparity between input and output file count.'
     files = len(inputs)
 
+    failed = 0
+    passed = 0
+
     for i in range(files):
         if not run_case(filename, '{}\n'.format(inputs[i].strip()),
                         '{}\n'.format(outputs[i].strip())):
             print("CASE {}/{} FAILED.".format(i + 1, files))
-            print('TESTS FAILED.')
-            return False
+            failed += 1
         else:
             print("CASE {}/{} PASSED.".format(i + 1, files))
-    print('ALL TESTS PASSED!')
-    return True
+            passed += 1
+    print("{}/{} CASES PASSED".format(passed, files))
+    return round(passed/(files) * 100)
