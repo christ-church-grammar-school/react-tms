@@ -34,8 +34,8 @@ class LoginBase extends React.Component {
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then(function() {
-        alert('login successful!');
         loginComponent.setState({...INITIAL_STATE});
+        this.props.history.push('/');
       }).catch(function(error) {
         loginComponent.setState({authError: true});
         loginComponent.refs.emailInput.value = '';
