@@ -35,7 +35,7 @@ class LoginBase extends React.Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(function() {
         loginComponent.setState({...INITIAL_STATE});
-        this.props.history.push('/');
+        loginComponent.props.history.push('/');
       }).catch(function(error) {
         loginComponent.setState({authError: true});
         loginComponent.refs.emailInput.value = '';
