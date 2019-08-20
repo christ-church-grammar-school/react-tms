@@ -31,8 +31,8 @@ def grade_file_url(url, inputs, outputs):
                             filename)
     return run_tests(filepath, inputs, outputs)
 
-def mark_student(upload, class_name, inputs, outputs):
-    student_upload = upload.to_dict()
+def mark_student(student, class_name, inputs, outputs):
+    student_upload = student.to_dict()
     student_upload_path = os.path.splitext(student_upload['refs'][0])[0].split('/')
     student_upload_str = student_upload_path[-3] + "_" + student_upload_path[-2]
     grading_path = u'classes/{}/uploads/{}/grading'.format(class_name, student_upload_str)
@@ -43,7 +43,8 @@ def mark_student(upload, class_name, inputs, outputs):
         if not test_dict['graded']:
             result = grade_file_url(student_upload['refs'][0], inputs, outputs)
             update_mark(TRANSACTION, DB.collection(
-                u'classes/10ASD1_2019/uploads/test_student_1_1/grading')
+                u'classes/{}/uploads/{}/grading'.format(
+                    class_name, student_upload_str))
                         .document(u'test_1'), result)
 
 def mark_class(class_name):
