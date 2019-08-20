@@ -50,7 +50,7 @@ def run_case(filename, specified_input, specified_output):
     print('ERROR: Unsupported extension "{}"'.format(ext), file=sys.stderr)
     return False
 
-def run_tests(filename, dirname):
+def run_tests(filename, dirname, inputs, outputs):
     """Runs a batch of test cases pertinent to a specific language.
 
     For more information, see execute() in this module, and the method
@@ -60,8 +60,8 @@ def run_tests(filename, dirname):
       filename: The name of the file we are running
     """
 
-    inputs = open('tests/{}/input.txt'.format(dirname), 'r').readlines()
-    outputs = open('tests/{}/output.txt'.format(dirname), 'r').readlines()
+    # inputs = open('tests/{}/input.txt'.format(dirname), 'r').readlines()
+    # outputs = open('tests/{}/output.txt'.format(dirname), 'r').readlines()
 
     assert len(inputs) == len(outputs), \
            'Disparity between input and output file count.'
