@@ -22,14 +22,14 @@ def update_mark(transaction, grading_ref, result):
         u'graded': True
     })
 
-def grade_file_url(url, test_name, inputs, outputs):
+def grade_file_url(url, inputs, outputs):
     download = BUCKET.get_blob(url).download_as_string().decode('utf-8')
     filename = url.split('/')[-1]
     open('uploads/{}'.format(filename), 'w').write(download)
     filepath = os.path.join(os.path.join(
         os.path.dirname(os.path.realpath(__file__)), 'uploads/'),
                             filename)
-    return run_tests(filepath, test_name, inputs, outputs)
+    return run_tests(filepath, inputs, outputs)
 
 def mark_student(upload, class_name, inputs, outputs):
     student_upload = upload.to_dict()
@@ -41,7 +41,7 @@ def mark_student(upload, class_name, inputs, outputs):
     for test in grading_stream:
         test_dict = test.to_dict()
         if not test_dict['graded']:
-            result = grade_file_url(student_upload['refs'][0], 'aplusb', inputs, outputs)
+            result = grade_file_url(student_upload['refs'][0], inputs, outputs)
             update_mark(TRANSACTION, DB.collection(
                 u'classes/10ASD1_2019/uploads/test_student_1_1/grading')
                         .document(u'test_1'), result)
