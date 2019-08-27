@@ -1,0 +1,44 @@
+.TestDesignerSidebar {
+  background-color: #ebf2ff;
+  display: flex;
+  flex: 1;
+  float: left;
+  height: calc(100vh - 70px);
+  overflow-y: scroll;
+  position: relative;
+  width: 15em;
+}
+
+.TestDesignerSidebar ul {
+  list-style: none;
+  list-style-type: none;
+  list-style-position: none;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.TestDesignerSidebar li {
+  list-style: none;
+  list-style-type: none;
+  list-style-position: none;
+  padding: 0.5em;
+  text-align: left;
+  width: 100%;
+}
+
+.TestDesignerSidebar li:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.RightAlignedContent {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 70px);
+  margin: 0;
+  overflow-y: scroll;
+  padding: 1em;
+  text-align: right;
+  width: calc(100vw - 15em);
+}
