@@ -40,5 +40,5 @@
   overflow-y: scroll;
   padding: 1em;
   text-align: right;
-  width: calc(100vw - 15em);
+  width: calc(100% - 15em);
 }

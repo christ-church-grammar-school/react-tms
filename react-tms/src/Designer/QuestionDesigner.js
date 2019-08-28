@@ -21,10 +21,10 @@ class QuestionDesigner extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="EditorWrapper">
         <input className="QuestionTitleEditor"
                placeholder="Question Title" />
-        <QuestionStatementEditor />
+        <QuestionStatementEditor ref={this.questionStatementEditor} />
       </div>
     );
   }

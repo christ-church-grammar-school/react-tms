@@ -1,6 +1,17 @@
 .QuestionTitleEditor {
   background-color: transparent;
+  border: 0;
   color: black;
   font-size: 30px;
+  margin-bottom: 0.5em;
+  width: 100%;
+}
+
+.QuestionTitleEditor:focus {
+  border: 0;
+  outline-width: 0;
+}
+
+.EditorWrapper {
   width: 100%;
 }
