@@ -1,7 +1,6 @@
 import React from 'react';
 
 import './QuestionDesigner.css';
-import QuestionStatementEditor from './editor';
 
 class QuestionDesigner extends React.Component {
   constructor(props) {
@@ -9,22 +8,33 @@ class QuestionDesigner extends React.Component {
 
     this.questionStatementEditor = React.createRef();
     this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.handleStatementChange = this.handleStatementChange.bind(this);
 
     this.state = {
       questionTitle: '',
-    }
+      questionStatement: '',
+    };
   }
 
   handleTitleChange(event) {
-    this.setState({ questionTitle: event.target.value });
+    this.setState({questionTitle: event.target.value});
+  }
+
+  handleStatementChange(event) {
+    this.setState({questionStatement: event.target.value});
   }
 
   render() {
     return (
       <div className="EditorWrapper">
         <input className="QuestionTitleEditor"
-               placeholder="Question Title" />
-        <QuestionStatementEditor ref={this.questionStatementEditor} />
+               placeholder="Question Title"
+               onChange={this.handleTitleChange} />
+        <div>
+          <textarea className="QuestionStatementEditor"
+                    placeholder="Question Statement..."
+                    onChange={this.handleStatementChange} />
+        </div>
       </div>
     );
   }

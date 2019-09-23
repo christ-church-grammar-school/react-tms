@@ -3,13 +3,24 @@
   border: 0;
   color: black;
   font-size: 30px;
-  margin-bottom: 0.5em;
+  height: 50px;
+  margin-bottom: 0.25em;
   width: 100%;
 }
 
 .QuestionTitleEditor:focus {
   border: 0;
   outline-width: 0;
+}
+
+.QuestionStatementEditor {
+  background-color: transparent;
+  border: 0;
+  color: black;
+  font-size: 15px;
+  height: calc(100vh - 150px);
+  resize: none;
+  width: 100%;
 }
 
 .EditorWrapper {
