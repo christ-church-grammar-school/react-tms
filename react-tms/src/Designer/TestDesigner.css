@@ -36,7 +36,7 @@
   display: flex;
   flex: 1;
   height: calc(100vh - 70px);
-  margin: 0;
+  margin-left: 15em;
   padding: 1em;
   text-align: right;
   width: calc(100% - 15em);
