@@ -8,7 +8,7 @@ admin.initializeApp({
 
 let db = admin.firestore();
 
-class Test {
+class TestCase {
   constructor(item) {
     this.title = item.title;
     this.input = item.input;
@@ -18,7 +18,7 @@ class Test {
   }
 }
 
-class TestSequence {
+class TestCaseGroup {
   constructor(path) {
     this.path = path;
     this.tests = {};
@@ -26,7 +26,7 @@ class TestSequence {
 
   updateTests() {
     this.collection.forEach((item) => {
-      this.tests[item.title] = new Test(item);
+      this.tests[item.title] = new TestCase(item);
     })
   }
 
@@ -35,7 +35,7 @@ class TestSequence {
     db.collection(this.path).get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          let test = new Test(doc.data())
+          let test = new TestCase(doc.data())
           final.push(test);
         });
         this.collection = final;
@@ -48,10 +48,10 @@ class TestSequence {
   }
 }
 
-const seq = new TestSequence('/classes/10ASD1_2019/tests');
+const seq = new TestCaseGroup('/classes/10ASD1_2019/tests');
 seq.latest();
 
 setTimeout(function() {
-  console.log(seq)
-  console.log(seq.tests['A Plus B'].input)
+  console.log(seq);
+  // console.log(seq.tests['A Plus B'].input)
 }, 5000)
