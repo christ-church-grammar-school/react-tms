@@ -1,5 +1,7 @@
 import React from 'react';
 
+import TextareaAutosize from 'react-autosize-textarea';
+
 import './QuestionDesigner.css';
 
 class QuestionDesigner extends React.Component {
@@ -31,10 +33,13 @@ class QuestionDesigner extends React.Component {
                placeholder="Question Title"
                onChange={this.handleTitleChange} />
         <div>
-          <textarea className="QuestionStatementEditor"
-                    placeholder="Question Statement..."
-                    onChange={this.handleStatementChange} />
+          <TextareaAutosize className="QuestionStatementEditor"
+                            placeholder="Question Statement..."
+                            onChange={this.handleStatementChange}
+                            onResize={(e) => {}} />
         </div>
+
+        <hr />
       </div>
     );
   }

@@ -18,7 +18,8 @@
   border: 0;
   color: black;
   font-size: 15px;
-  height: calc(100vh - 150px);
+  margin-bottom: 0.5em;
+  outline: none;
   resize: none;
   width: 100%;
 }
