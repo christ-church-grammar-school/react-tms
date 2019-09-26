@@ -27,3 +27,29 @@
 .EditorWrapper {
   width: 100%;
 }
+
+.TestCase {
+  text-align: center;
+  width: 100%;
+}
+
+.TestCase textarea {
+  height: 100%;
+  resize: none;
+  width: 100%;
+}
+
+.TestCaseHeaderButtonWrapper {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.TestCase h3 {
+  text-align: center;
+}
+
+.TestCaseDeleteButton {
+  position: absolute;
+  right: 0;
+}
