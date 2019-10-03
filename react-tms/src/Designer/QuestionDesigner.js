@@ -15,8 +15,8 @@ class QuestionDesigner extends React.Component {
     this.handleAddTestCase = this.handleAddTestCase.bind(this);
     this.handleRemoveTestCase = this.handleRemoveTestCase.bind(this);
     this.handleTestCaseInputChange = this.handleTestCaseInputChange.bind(this);
-    this.handleTestCaseOutputChange = this.handleTestCaseOutputChange.
-      bind(this);
+    this.handleTestCaseOutputChange = this.handleTestCaseOutputChange
+      .bind(this);
 
     this.state = {
       questionTitle: '',
@@ -89,7 +89,7 @@ class QuestionDesigner extends React.Component {
         <div className="TestCase" key={idx}>
           <div className="TestCaseHeaderButtonWrapper">
             <h3>
-              Test Case {idx}
+              Test Case {idx + 1}
             </h3>
             <button className="TestCaseDeleteButton"
                     onClick={this.handleRemoveTestCase(idx)}>
@@ -99,14 +99,14 @@ class QuestionDesigner extends React.Component {
           <TextareaAutosize className="TestCaseInput"
                             placeholder="Input..."
                             onChange={this.handleTestCaseInputChange(idx)}
-                            onResize={(e) => {}}>
-            {testCase.input}
+                            onResize={(e) => {}}
+                            value={testCase.input}>
           </TextareaAutosize>
           <TextareaAutosize className="TestCaseOutput"
                             placeholder="Output..."
                             onChange={this.handleTestCaseOutputChange(idx)}
-                            onResize={(e) => {}}>
-            {testCase.output}
+                            onResize={(e) => {}}
+                            value={testCase.output}>
           </TextareaAutosize>
         </div>
       );
@@ -126,7 +126,7 @@ class QuestionDesigner extends React.Component {
 
         <hr />
         <br />
-        <h2 style={{'textAlign': 'left'}}>
+        <h2 style={{'textAlign': 'left', 'marginBottom': '0.5em'}}>
           Test Cases
         </h2>
 

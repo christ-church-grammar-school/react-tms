@@ -53,3 +53,7 @@
   position: absolute;
   right: 0;
 }
+
+.TestCaseOutput {
+  margin-bottom: 0.75em;
+}
