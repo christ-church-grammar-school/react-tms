@@ -18,11 +18,42 @@
   border: 0;
   color: black;
   font-size: 15px;
-  height: calc(100vh - 150px);
+  margin-bottom: 0.5em;
+  outline: none;
   resize: none;
   width: 100%;
 }
 
 .EditorWrapper {
   width: 100%;
+}
+
+.TestCase {
+  text-align: center;
+  width: 100%;
+}
+
+.TestCase textarea {
+  height: 100%;
+  resize: none;
+  width: 100%;
+}
+
+.TestCaseHeaderButtonWrapper {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.TestCase h3 {
+  text-align: center;
+}
+
+.TestCaseDeleteButton {
+  position: absolute;
+  right: 0;
+}
+
+.TestCaseOutput {
+  margin-bottom: 0.75em;
 }
