@@ -48,10 +48,14 @@ class TestCaseGroup {
   }
 }
 
-const seq = new TestCaseGroup('/classes/10ASD1_2019/tests');
-seq.latest();
+function _testTestCaseGroup() {
+  const seq = new TestCaseGroup('/classes/10ASD1_2019/tests');
+  seq.latest();
 
-setTimeout(function() {
-  console.log(seq);
-  // console.log(seq.tests['A Plus B'].input)
-}, 5000)
+  setTimeout(function() {
+    console.log(seq);
+    // console.log(seq.tests['A Plus B'].input)
+  }, 5000)
+}
+
+export {TestCase, TestCaseGroup}
