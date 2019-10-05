@@ -127,6 +127,5 @@ dmypy.json
 .pyre/
 
 # Python admin server related
-credentials.json
 uploads/
 

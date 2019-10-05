@@ -5,12 +5,27 @@
   font-size: 30px;
   height: 50px;
   margin-bottom: 0.25em;
-  width: 100%;
+  text-align: left;
+  width: calc(100% - 3.25em);
 }
 
 .QuestionTitleEditor:focus {
   border: 0;
   outline-width: 0;
+}
+
+.QuestionTitleWrapper {
+  display: flex;
+  justify-content: left;
+  position: relative;
+}
+
+.QuestionSaveButton {
+  font-size: 25px;
+  height: 50px;
+  position: absolute;
+  right: 0;
+  width: 3.25em;
 }
 
 .QuestionStatementEditor {
