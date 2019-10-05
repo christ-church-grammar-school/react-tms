@@ -6,6 +6,10 @@ import {withAuthorization} from '../Session';
 
 import './QuestionDesigner.css';
 
+const METADATA_TXT = {
+  contentType: 'text/plain',
+};
+
 // Converts a given string to an array of Uint8 objects.
 //
 // This function enables us to write to the Cloud Firestore.
@@ -118,20 +122,28 @@ class QuestionDesigner extends React.Component {
     // Now we write to the database...
     // Firstly, we write the inputs:
     for (const [idx, testCase] of this.state.testCases.entries()) {
-      const inputsRef = testsRef.child(questionPath + `inputs/case_${idx}.txt`);
-      inputsRef.put(stringToUint8Array(testCase.input)).then(() => {
+      const inputsRef = testsRef.child(questionPath +
+                                       `inputs/case_${idx}.txt`);
+      inputsRef.put(stringToUint8Array(testCase.input), METADATA_TXT)
+        .then(() => {
         console.log('Uploaded input to ' + inputsRef.fullPath);
       });
-      const outputsRef = testsRef.child(questionPath + `outputs/case_${idx}.txt`);
-      outputsRef.put(stringToUint8Array(testCase.output)).then(() => {
+
+      const outputsRef = testsRef.child(questionPath +
+                                        `outputs/case_${idx}.txt`);
+      outputsRef.put(stringToUint8Array(testCase.output), METADATA_TXT)
+        .then(() => {
         console.log('Uploaded output to ' + outputsRef.fullPath);
       });
     }
+
     // Then, we write the question statement.
     const questionRef = testsRef.child(questionPath + 'statement.txt');
-    questionRef.put(stringToUint8Array(this.state.questionStatement)).then(() => {
+    questionRef.put(stringToUint8Array(this.state.questionStatement),
+                                       METADATA_TXT)
+      .then(() => {
       console.log('Uploaded question statement to ' + questionRef.fullPath);
-    })
+    });
   }
 
   render() {
