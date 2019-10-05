@@ -2,11 +2,33 @@ import React from 'react';
 
 import TextareaAutosize from 'react-autosize-textarea';
 
+import {withAuthorization} from '../Session';
+
 import './QuestionDesigner.css';
+
+const METADATA_TXT = {
+  contentType: 'text/plain',
+};
+
+// Converts a given string to an array of Uint8 objects.
+//
+// This function enables us to write to the Cloud Firestore.
+//
+// Args:
+//   s: The string which we convert to the bytearray.
+//
+function stringToUint8Array(s) {
+  return new TextEncoder().encode(s);
+}
 
 class QuestionDesigner extends React.Component {
   constructor(props) {
     super(props);
+
+    this.testName = this.props.testName;
+    if (this.testName === null || this.testName === undefined) {
+      alert('QuestionDesigner.testName has not been set.');
+    }
 
     this.questionStatementEditor = React.createRef();
     this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -16,6 +38,8 @@ class QuestionDesigner extends React.Component {
     this.handleRemoveTestCase = this.handleRemoveTestCase.bind(this);
     this.handleTestCaseInputChange = this.handleTestCaseInputChange.bind(this);
     this.handleTestCaseOutputChange = this.handleTestCaseOutputChange
+      .bind(this);
+    this.handleSaveToCloudFirestore = this.handleSaveToCloudFirestore
       .bind(this);
 
     this.state = {
@@ -81,6 +105,46 @@ class QuestionDesigner extends React.Component {
   handleStatementChange(event) {
     this.setState({questionStatement: event.target.value});
   }
+  
+  // Handles a save of the question and all appropriate test cases to the Cloud
+  // Firestore.
+  handleSaveToCloudFirestore() {
+    const testsRef = this.props.firebase.getStorageRef('tests/');
+    const questionPath = this.testName + '/' + this.state.questionTitle + '/';
+    testsRef.child(questionPath).delete().then(() => {
+      // Deletion occurred successfully.
+    }).catch((err) => {
+      if (err.code !== 'storage/object-not-found') {
+        console.error(err);
+      }
+    });
+
+    // Now we write to the database...
+    // Firstly, we write the inputs:
+    for (const [idx, testCase] of this.state.testCases.entries()) {
+      const inputsRef = testsRef.child(questionPath +
+                                       `inputs/case_${idx}.txt`);
+      inputsRef.put(stringToUint8Array(testCase.input), METADATA_TXT)
+        .then(() => {
+        console.log('Uploaded input to ' + inputsRef.fullPath);
+      });
+
+      const outputsRef = testsRef.child(questionPath +
+                                        `outputs/case_${idx}.txt`);
+      outputsRef.put(stringToUint8Array(testCase.output), METADATA_TXT)
+        .then(() => {
+        console.log('Uploaded output to ' + outputsRef.fullPath);
+      });
+    }
+
+    // Then, we write the question statement.
+    const questionRef = testsRef.child(questionPath + 'statement.txt');
+    questionRef.put(stringToUint8Array(this.state.questionStatement),
+                                       METADATA_TXT)
+      .then(() => {
+      console.log('Uploaded question statement to ' + questionRef.fullPath);
+    });
+  }
 
   render() {
     const testCasesAsHtml = [];
@@ -114,9 +178,15 @@ class QuestionDesigner extends React.Component {
 
     return (
       <div className="EditorWrapper">
-        <input className="QuestionTitleEditor"
-               placeholder="Question Title"
-               onChange={this.handleTitleChange} />
+        <div className="QuestionTitleWrapper">
+          <input className="QuestionTitleEditor"
+                 placeholder="Question Title"
+                 onChange={this.handleTitleChange} />
+          <button className="QuestionSaveButton"
+                  onClick={this.handleSaveToCloudFirestore}>
+            Save
+          </button>
+        </div>
         <div>
           <TextareaAutosize className="QuestionStatementEditor"
                             placeholder="Question Statement..."
@@ -142,4 +212,6 @@ class QuestionDesigner extends React.Component {
   }
 }
 
-export default QuestionDesigner;
+const condition = (authUser) => !!authUser;
+
+export default withAuthorization(condition)(QuestionDesigner);

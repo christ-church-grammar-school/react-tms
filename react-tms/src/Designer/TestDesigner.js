@@ -22,7 +22,6 @@ class TestDesigner extends React.Component {
     super(props);
 
     this.handleAddQuestion = this.handleAddQuestion.bind(this);
-    this.questionDesigner = React.createRef();
     this.state = {
       selectedIndex: 0,
       testName: '',
@@ -57,7 +56,7 @@ class TestDesigner extends React.Component {
           {questionsAsHtml}
         </div>
         <div className="RightAlignedContent">
-          <QuestionDesigner ref={this.questionDesigner} />
+          <QuestionDesigner testName="DemoTest" />
         </div>
       </div>
     );
