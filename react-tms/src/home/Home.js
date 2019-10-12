@@ -18,19 +18,14 @@ class HomePage extends React.Component {
     this.setState({loading: true});
 
     var teacherUid = this.props.firebase.auth().currentUser.uid;
-
-    console.log(this.props.firebase);
-
     const teacherDoc = this.props.firebase.db().doc(`teachers/${teacherUid}`);
 
     teacherDoc.get().then(doc => {
-      console.log(doc.data());
       if (doc.exists) {
         this.setState({
           loading: false,
           teachingGroups: doc.data().classes,
         });
-        console.log(this.state);
       } else {
         console.error('Cloud Firestore document [' + `teachers/${teacherUid}` +
                       '] does not exist.');
@@ -45,12 +40,9 @@ class HomePage extends React.Component {
   }
 
   render() {
-    console.log(this.state.teachingGroups);
-
     var teachingGroupsAsHtml = [];
     if (this.state.teachingGroups.length > 0) {
       for (const [idx, tgroup] of this.state.teachingGroups.entries()) {
-        console.log('iterating over: ', tgroup);
         teachingGroupsAsHtml.push(
           <tr>{tgroup}</tr>
         );
