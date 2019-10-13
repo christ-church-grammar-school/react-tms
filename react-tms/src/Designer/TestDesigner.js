@@ -39,6 +39,15 @@ const SIDEBAR_STYLES_OVERRIDE = {
 
 const UNSAVED_EDITOR_MESSAGE = 'You have unsaved changes. Are you sure you wish to proceed?';
 
+// Returns the number of a test case input/output file.
+// Note that this number will be 0-indexed.
+//
+function getNumFromFname(fname) {
+  const secondHalf = fname.split('_')[1];
+  const numberAsStr = secondHalf.split('.')[0];
+  return parseInt(numberAsStr);
+}
+
 class TestDesigner extends React.Component {
   constructor(props) {
     super(props);
@@ -48,6 +57,8 @@ class TestDesigner extends React.Component {
       console.error('testName is undefined.');
     }
 
+    this.questionStatementRef = React.createRef();
+
     this.attemptedSelect = undefined;
 
     this.handleAddQuestion = this.handleAddQuestion.bind(this);
@@ -55,6 +66,8 @@ class TestDesigner extends React.Component {
     this.handleLoadNewQuestion = this.handleLoadNewQuestion.bind(this);
 
     this.handleStatementChange = this.handleStatementChange.bind(this);
+    this.handleGetTextFromFile = this.handleGetTextFromFile.bind(this);
+    this.loadQuestionStatementText = this.loadQuestionStatementText.bind(this);
 
     this.handleAddTestCase = this.handleAddTestCase.bind(this);
     this.handleRemoveTestCase = this.handleRemoveTestCase.bind(this);
@@ -127,14 +140,71 @@ class TestDesigner extends React.Component {
       // Load the question from the cloud storage.
       const questionTitle = `Question ${newIdx}`;
       const testRef = this.props.firebase.getStorageRef(`tests/${this.testName}/${questionTitle}`);
+      console.log('Attempting to download!!!');
+      this.handleGetTextFromFile(testRef);
       this.setState({
-        questionStatement: this.handleGetTextFromFile(testRef.child('statement.txt')),
+        selectedIndex: newIdx,
       });
     }
   }
 
   handleGetTextFromFile(ref) {
-    ref.getDownloadURL();
+    console.log('Attempting to get text from file!');
+    console.log(ref.getDownloadURL());
+
+    const T = this;
+    ref.child('statement.txt').getDownloadURL().then(url => {
+      fetch(url).then(response => {
+        console.log('RESPONDING...');
+        response.text().then(text => {
+          T.loadQuestionStatementText(text);
+        });
+      });
+    });
+
+    this.setState({testCases: []});
+    console.log('ABOUT TO LOG');
+    console.log(ref.child('inputs/').listAll());
+
+    ref.child('inputs/').listAll().then(res => {
+      res.items.forEach(itemRef => {
+        const idx = getNumFromFname(itemRef.name);
+        itemRef.getDownloadURL().then(url => {
+          fetch(url).then(response => {
+            response.text().then(text => {
+              T.state.testCases[idx] = {...T.state.testCases[idx], input: text};
+              console.log(this.state.testCases);
+              this.forceUpdate();
+            });
+          });
+        });
+      });
+    });
+
+    setTimeout(()=>{}, 1);
+
+    ref.child('outputs/').listAll().then(res => {
+      res.items.forEach(itemRef => {
+        itemRef.getDownloadURL().then(url => {
+          fetch(url).then(response => {
+            console.log(itemRef);
+            const idx = getNumFromFname(itemRef.name);
+            response.text().then(text => {
+              T.state.testCases[idx] = {...T.state.testCases[idx], output: text};
+              console.log('GOT OUTPUT TEXT:', text, "FOR IDX:", idx);
+              console.log(T.state.testCases);
+              this.forceUpdate();
+            });
+          });
+        });
+      });
+    });
+  }
+
+  loadQuestionStatementText(text) {
+    //this.refs.StatementEditor.value = text;
+    this.questionStatementRef.current.value = text;
+    this.setState({questionStatement: text});
   }
 
   ///////////////////////////////
@@ -312,7 +382,8 @@ class TestDesigner extends React.Component {
           <TextareaAutosize className="QuestionStatementEditor"
                             placeholder="Question Statement..."
                             onChange={this.handleStatementChange}
-                            onResize={(e) => {}} />
+                            onResize={(e) => {}}
+                            ref={this.questionStatementRef} />
         </div>
         <hr />
         <br />
