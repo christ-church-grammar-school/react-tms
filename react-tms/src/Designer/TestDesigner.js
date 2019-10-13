@@ -54,8 +54,6 @@ class TestDesigner extends React.Component {
     this.handleSelectNewQuestion = this.handleSelectNewQuestion.bind(this);
     this.handleLoadNewQuestion = this.handleLoadNewQuestion.bind(this);
 
-    this.questionStatementEditor = React.createRef();
-    this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleStatementChange = this.handleStatementChange.bind(this);
 
     this.handleAddTestCase = this.handleAddTestCase.bind(this);
@@ -67,13 +65,15 @@ class TestDesigner extends React.Component {
       .bind(this);
 
     this.renderQuestionView = this.renderQuestionView.bind(this);
+    this.handleGetTextFromFile = this.handleGetTextFromFile.bind(this);
+
+    this.newQuestions = new Set();
 
     this.state = {
-      questionTitle: '',
       questionStatement: '',
       testCases: [],
       unsaved: false,
-      questions: ['Question 1'],
+      questions: ['Question 0'],
       selectedIndex: 0,
     };
   }
@@ -86,25 +86,28 @@ class TestDesigner extends React.Component {
 
   // Adds another question to the sidebar.
   handleAddQuestion() {
-    this.state.questions.push(`Question ${this.state.questions.length + 1}`);
+    this.state.questions.push(`Question ${this.state.questions.length}`);
+    this.newQuestions.add(this.state.questions.length - 1);
     this.forceUpdate();
   }
 
   // Handles the selection of another question within the rendered list on the
   // sidebar.
-  handleSelectNewQuestion() {
-    console.log(`inside handleSelectNewQuestion(${this.attemptedSelect});`);
-    if (this.attemptedSelect !== this.state.selectedIndex) {
-      console.log('Currently trying to select question', this.attemptedSelect);
+  handleSelectNewQuestion(attemptedSelect) {
+    console.log(`inside handleSelectNewQuestion(${attemptedSelect});`);
+    if (attemptedSelect !== this.state.selectedIndex) {
+      // The user has selected a question other than the one they are currently
+      // viewing.
+      console.log('Currently trying to select question', attemptedSelect);
       if (this.state.unsaved) {
         console.log('Editor is unsaved!!!');
         if (window.confirm(UNSAVED_EDITOR_MESSAGE)) {
-          this.handleLoadNewQuestion(this.attemptedSelect);
+          this.handleLoadNewQuestion(attemptedSelect);
         } else {
           return;
         }
       } else {
-        this.handleLoadNewQuestion(this.attemptedSelect);
+        this.handleLoadNewQuestion(attemptedSelect);
       }
     }
   }
@@ -112,7 +115,26 @@ class TestDesigner extends React.Component {
   // Handles the required loading of another question from the cloud firestore,
   // or alternatively the creation of a new question.
   handleLoadNewQuestion(newIdx) {
-    // TODO.
+    console.log(`inside handleLoadNewQuestion(${newIdx})`);
+    if (this.newQuestions.has(newIdx)) {
+      this.setState({
+        questionStatement: '',
+        testCases: [],
+        unsaved: false,
+        selectedIndex: newIdx,
+      });
+    } else {
+      // Load the question from the cloud storage.
+      const questionTitle = `Question ${newIdx}`;
+      const testRef = this.props.firebase.getStorageRef(`tests/${this.testName}/${questionTitle}`);
+      this.setState({
+        questionStatement: this.handleGetTextFromFile(testRef.child('statement.txt')),
+      });
+    }
+  }
+
+  handleGetTextFromFile(ref) {
+    ref.getDownloadURL();
   }
 
   ///////////////////////////////
@@ -179,15 +201,6 @@ class TestDesigner extends React.Component {
     });
   }
 
-  // Handles a change of the question title.
-  //
-  handleTitleChange(event) {
-    this.setState({
-      questionTitle: event.target.value,
-      unsaved: true,
-    });
-  }
-
   // Handles a change of the question's statement.
   //
   handleStatementChange(event) {
@@ -206,8 +219,9 @@ class TestDesigner extends React.Component {
   // Handles a save of the question and all appropriate test cases to the Cloud
   // Firestore.
   handleSaveToCloudFirestore() {
+    const questionTitle = `Question ${this.state.selectedIndex}`;
     const testsRef = this.props.firebase.getStorageRef('tests/');
-    const questionPath = this.testName + '/' + this.state.questionTitle + '/';
+    const questionPath = this.testName + '/' + questionTitle + '/';
     testsRef.child(questionPath).delete().then(() => {
       // Deletion occurred successfully.
     }).catch((err) => {
@@ -239,6 +253,8 @@ class TestDesigner extends React.Component {
       .then(() => {
       console.log('Uploaded question statement to ' + questionRef.fullPath);
     });
+
+    this.newQuestions.delete(this.state.selectedIndex);
   }
 
   /////////////////////////////
@@ -284,9 +300,9 @@ class TestDesigner extends React.Component {
     return (
       <div className="EditorWrapper">
         <div className="QuestionTitleWrapper">
-          <input className="QuestionTitleEditor"
-                 placeholder="Question Title"
-                 onChange={this.handleTitleChange} />
+          <h1 className="QuestionTitleEditor">
+            Question {this.state.selectedIndex}
+          </h1>
           <button className="QuestionSaveButton"
                   onClick={this.handleSaveToCloudFirestore}>
             Save
@@ -323,10 +339,12 @@ class TestDesigner extends React.Component {
     const questionsAsHtml = [];
     for (const [idx, val] of this.state.questions.entries()) {
       questionsAsHtml.push(
-        <button className="w3-bar-item w3-button" key={idx}
-                onClick={(this.attemptedSelect = idx) && this.handleSelectNewQuestion}>
-          {val}
-        </button>
+        <div key={idx}>
+          <button className="w3-bar-item w3-button"
+                  onClick={this.handleSelectNewQuestion.bind(this, idx)}>
+            {val}
+          </button>
+        </div>
       );
     }
 
