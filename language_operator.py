@@ -107,10 +107,8 @@ class Operator(object):
                 self.revert(filename)
             else:
                 logging.error('Extension not supported')
-                print('ERROR: Extension not supported.', file=sys.stderr)
                 return None
         else:
             logging.error('No specified file extension')
-            print('ERROR: No specified file extension.', file=sys.stderr)
             return None
         return None
