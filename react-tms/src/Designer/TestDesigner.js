@@ -7,7 +7,6 @@ import {withAuthorization} from '../Session';
 import '../w3.css';
 import './TestDesigner.css';
 import './QuestionDesigner.css';
-
 const METADATA_TXT = {
   contentType: 'text/plain',
 };
@@ -38,6 +37,8 @@ const SIDEBAR_STYLES_OVERRIDE = {
   'width': '15em',
 };
 
+const UNSAVED_EDITOR_MESSAGE = 'You have unsaved changes. Are you sure you wish to proceed?';
+
 class TestDesigner extends React.Component {
   constructor(props) {
     super(props);
@@ -47,7 +48,11 @@ class TestDesigner extends React.Component {
       console.error('testName is undefined.');
     }
 
+    this.attemptedSelect = undefined;
+
     this.handleAddQuestion = this.handleAddQuestion.bind(this);
+    this.handleSelectNewQuestion = this.handleSelectNewQuestion.bind(this);
+    this.handleLoadNewQuestion = this.handleLoadNewQuestion.bind(this);
 
     this.questionStatementEditor = React.createRef();
     this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -67,8 +72,9 @@ class TestDesigner extends React.Component {
       questionTitle: '',
       questionStatement: '',
       testCases: [],
-      unsaved: true,
-      questions: ['Question 1']
+      unsaved: false,
+      questions: ['Question 1'],
+      selectedIndex: 0,
     };
   }
 
@@ -84,6 +90,31 @@ class TestDesigner extends React.Component {
     this.forceUpdate();
   }
 
+  // Handles the selection of another question within the rendered list on the
+  // sidebar.
+  handleSelectNewQuestion() {
+    console.log(`inside handleSelectNewQuestion(${this.attemptedSelect});`);
+    if (this.attemptedSelect !== this.state.selectedIndex) {
+      console.log('Currently trying to select question', this.attemptedSelect);
+      if (this.state.unsaved) {
+        console.log('Editor is unsaved!!!');
+        if (window.confirm(UNSAVED_EDITOR_MESSAGE)) {
+          this.handleLoadNewQuestion(this.attemptedSelect);
+        } else {
+          return;
+        }
+      } else {
+        this.handleLoadNewQuestion(this.attemptedSelect);
+      }
+    }
+  }
+
+  // Handles the required loading of another question from the cloud firestore,
+  // or alternatively the creation of a new question.
+  handleLoadNewQuestion(newIdx) {
+    // TODO.
+  }
+
   ///////////////////////////////
   //                           //
   //  Question Designer utils  //
@@ -94,7 +125,8 @@ class TestDesigner extends React.Component {
   // tests.
   handleAddTestCase() {
     this.setState({
-      testCases: this.state.testCases.concat([{input: '', output: ''}])
+      testCases: this.state.testCases.concat([{input: '', output: ''}]),
+      unsaved: true,
     });
   }
 
@@ -106,7 +138,8 @@ class TestDesigner extends React.Component {
   //
   handleRemoveTestCase = (idx) => () => {
     this.setState({
-      testCases: this.state.testCases.filter((tc, tcIdx) => (tcIdx !== idx))
+      testCases: this.state.testCases.filter((tc, tcIdx) => (tcIdx !== idx)),
+      unsaved: true,
     });
   }
 
@@ -122,7 +155,10 @@ class TestDesigner extends React.Component {
       }
       return {...testCase, input: event.target.value};
     });
-    this.setState({testCases: newTestCases});
+    this.setState({
+      testCases: newTestCases,
+      unsaved: true,
+    });
   }
 
   // Handles the changing of a dynamically rendered test case's output field.
@@ -137,19 +173,28 @@ class TestDesigner extends React.Component {
       }
       return {...testCase, output: event.target.value};
     });
-    this.setState({testCases: newTestCases});
+    this.setState({
+      testCases: newTestCases,
+      unsaved: true,
+    });
   }
 
   // Handles a change of the question title.
   //
   handleTitleChange(event) {
-    this.setState({questionTitle: event.target.value});
+    this.setState({
+      questionTitle: event.target.value,
+      unsaved: true,
+    });
   }
 
   // Handles a change of the question's statement.
   //
   handleStatementChange(event) {
-    this.setState({questionStatement: event.target.value});
+    this.setState({
+      questionStatement: event.target.value,
+      unsaved: true,
+    });
   }
   
   ////////////////////////////
@@ -278,9 +323,10 @@ class TestDesigner extends React.Component {
     const questionsAsHtml = [];
     for (const [idx, val] of this.state.questions.entries()) {
       questionsAsHtml.push(
-        <a href="#" className="w3-bar-item w3-button" key={idx}>
+        <button className="w3-bar-item w3-button" key={idx}
+                onClick={(this.attemptedSelect = idx) && this.handleSelectNewQuestion}>
           {val}
-        </a>
+        </button>
       );
     }
 
