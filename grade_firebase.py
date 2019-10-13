@@ -1,4 +1,5 @@
 import os
+import datetime
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -16,10 +17,12 @@ DB = firestore.client()
 TRANSACTION = DB.transaction()
 
 @firestore.transactional #pylint: disable = no-member
-def update_mark(transaction, grading_ref, result):
-    transaction.update(grading_ref, {
+def update_mark(transaction, ref, result, outputs):
+    transaction.update(ref, {
         u'result': result,
-        u'graded': True
+        u'graded': True,
+        u'outputs': outputs,
+        u'graded_at': datetime.datetime.now()
     })
 
 def get_blobs(path):
@@ -61,17 +64,12 @@ def mark_student(student, class_name, inputs, outputs):
     student_upload = student.to_dict()
     student_upload_path = os.path.splitext(student_upload['refs'][0])[0].split('/')
     student_upload_str = student_upload_path[-3] + "_" + student_upload_path[-2]
-    grading_path = u'classes/{}/uploads/{}/grading'.format(class_name, student_upload_str)
-    grading_stream = DB.collection(grading_path).stream()
 
-    for test in grading_stream:
-        test_dict = test.to_dict()
-        if not test_dict['graded']:
-            result = grade_file_url(student_upload['refs'][0], inputs, outputs)
-            update_mark(TRANSACTION, DB.collection(
-                u'classes/{}/uploads/{}/grading'.format(
-                    class_name, student_upload_str))
-                        .document(u'test_1'), result)
+    if not student_upload['graded']:
+        result = grade_file_url(student_upload['refs'][0], inputs, outputs)
+        update_mark(TRANSACTION, DB.collection(
+            u'classes/{}/uploads'.format(
+                class_name)).document(student.id), result, [])
 
 def mark_class(class_name, test_name, question_name):
     class_ref = DB.collection(u'classes/{}/uploads'.format(class_name))
