@@ -7,6 +7,12 @@ from __future__ import print_function
 
 import os
 import sys
+import logging
+import datetime
+
+logging.basicConfig(filename='.server.log',level=logging.DEBUG)
+logging.info('Started new logging session at {}'
+            .format(datetime.datetime.now()))
 
 from subprocess import Popen, PIPE
 
@@ -82,14 +88,14 @@ class Operator(object):
             if ext in self.extensions:
                 if self.cmd_cmpl:
                     self.replace(filename)
-                    print('COMPILATION COMMAND:', self.cmd_cmpl)
+                    logging.debug('Compilation command:', self.cmd_cmpl)
                     Popen(self.cmd_cmpl, shell=True).wait()
                     self.revert(filename)
 
                 self.replace(filename)
                 build = ''
                 build += self.cmd_run
-                print('BUILD COMMAND IS: {}'.format(build))
+                logging.debug('Build command: {}'.format(build))
                 process = Popen(build, shell=True, stdout=PIPE, stdin=PIPE,
                                 stderr=sys.stderr)
                 program_out = process.\
@@ -100,9 +106,11 @@ class Operator(object):
                 process.wait()
                 self.revert(filename)
             else:
+                logging.error('Extension not supported')
                 print('ERROR: Extension not supported.', file=sys.stderr)
                 return None
         else:
+            logging.error('No specified file extension')
             print('ERROR: No specified file extension.', file=sys.stderr)
             return None
         return None
