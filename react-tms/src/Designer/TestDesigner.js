@@ -52,7 +52,8 @@ class TestDesigner extends React.Component {
   constructor(props) {
     super(props);
 
-    this.testName = this.props.testName;
+    const {testName} = this.props.match.params;
+    this.testName = testName;
     if (this.testName === undefined) {
       console.error('testName is undefined.');
     }
@@ -83,12 +84,27 @@ class TestDesigner extends React.Component {
     this.newQuestions = new Set();
 
     this.state = {
+      loadingQuestionNames: false,
       questionStatement: '',
       testCases: [],
       unsaved: false,
-      questions: ['Question 0'],
+      questions: [],
       selectedIndex: 0,
     };
+  }
+
+  componentDidMount() {
+    const testRef = this.props.firebase.getStorageRef(`tests/${this.testName}`);
+    const T = this;
+    testRef.listAll().then(res => {
+      res.prefixes.forEach(folderRef => {
+        T.state.questions.push(folderRef.name);
+      });
+      T.state.questions.sort();
+      T.setState({
+        loadingQuestionNames: false,
+      });
+    })
   }
 
   ///////////////////////////////
@@ -338,6 +354,12 @@ class TestDesigner extends React.Component {
   // title editor, and question statement editor.
   //
   renderQuestionView() {
+    if (this.state.loadingQuestionNames) {
+      return (
+        <div className="EditorWrapper" />
+      )
+    }
+
     const testCasesAsHtml = [];
     for (const [idx, testCase] of this.state.testCases.entries()) {
       testCasesAsHtml.push(
@@ -408,15 +430,23 @@ class TestDesigner extends React.Component {
   //
   render() {
     const questionsAsHtml = [];
-    for (const [idx, val] of this.state.questions.entries()) {
+    if (this.state.loadingQuestionNames) {
       questionsAsHtml.push(
-        <div key={idx}>
-          <button className="w3-bar-item w3-button"
-                  onClick={this.handleSelectNewQuestion.bind(this, idx)}>
-            {val}
-          </button>
+        <div key={0}>
+          loading...
         </div>
-      );
+      )
+    } else {
+      for (const [idx, val] of this.state.questions.entries()) {
+        questionsAsHtml.push(
+          <div key={idx}>
+            <button className="w3-bar-item w3-button"
+                    onClick={this.handleSelectNewQuestion.bind(this, idx)}>
+              {val}
+            </button>
+          </div>
+        );
+      }
     }
 
     return (

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {Link} from 'react-router-dom';
+
 import { withAuthorization } from '../Session';
 
 import './Home.css';
@@ -37,7 +39,7 @@ class HomePage extends React.Component {
         this.setState({
           loading: false,
           teachingGroups: ['An error was encountered.'],
-        })
+        });
       }
     });
 
@@ -76,9 +78,13 @@ class HomePage extends React.Component {
         <tr key={0}>loading...</tr>
       );
     } else if (this.state.teachingGroups.length > 0) {
-      for (const [idx, testName] of this.state.tests.entries()) {
+      for (const [idx, tName] of this.state.tests.entries()) {
         testsAsHtml.push(
-          <tr key={idx}>{testName}</tr>
+          <tr key={idx}>
+            <Link to={`/designer/${tName}`}>
+              {tName}
+            </Link>
+          </tr>
         )
       }
     } else {
