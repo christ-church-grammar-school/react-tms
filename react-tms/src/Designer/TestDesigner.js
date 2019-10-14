@@ -85,11 +85,11 @@ class TestDesigner extends React.Component {
 
     this.state = {
       loadingQuestionNames: false,
-      questionStatement: '',
+      questionStatement: 'loading...',
       testCases: [],
       unsaved: false,
       questions: [],
-      selectedIndex: 0,
+      selectedIndex: 'loading...',
     };
   }
 
@@ -104,7 +104,8 @@ class TestDesigner extends React.Component {
       T.setState({
         loadingQuestionNames: false,
       });
-    })
+      T.handleSelectNewQuestion(0);
+    });
   }
 
   ///////////////////////////////
