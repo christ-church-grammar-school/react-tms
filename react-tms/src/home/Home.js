@@ -6,9 +6,28 @@ import { withAuthorization } from '../Session';
 
 import './Home.css';
 
+const METADATA_TXT = {
+  contentType: 'text/plain',
+};
+
+// Converts a given string to an array of Uint8 objects.
+//
+// This function enables us to write to the Cloud Firestore.
+//
+// Args:
+//   s: The string which we convert to the bytearray.
+//
+function stringToUint8Array(s) {
+  return new TextEncoder().encode(s);
+}
+
+const NEW_TEST_PROMPT = 'Please enter the name of the new test. NOTE: This cannot be changed later.';
+
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleCreateNewTest = this.handleCreateNewTest.bind(this);
 
     this.state = {
       loading: true,
@@ -60,6 +79,26 @@ class HomePage extends React.Component {
     this.forceUpdate();
   }
 
+  // Handles the creation of a new test.
+  handleCreateNewTest() {
+    const newTestName = window.prompt(NEW_TEST_PROMPT);
+    if (newTestName === undefined || newTestName === '' ||
+        newTestName === null) {
+      return;
+    }
+    const path = `tests/${newTestName}`;
+    const newQuestionPath = `${path}/Question 0`;
+    const newQuestionRef = this.props.firebase.getStorageRef(newQuestionPath);
+    newQuestionRef.child('statement.txt')
+      .put(stringToUint8Array('The question statement goes here'), METADATA_TXT)
+      .then(() => {
+        console.log('New test successfully created!');
+      });
+    this.setState({
+      tests: this.state.tests.concat([newTestName]).sort()
+    });
+  }
+
   render() {
     var teachingGroupsAsHtml = [];
     if (this.state.teachingGroups.length > 0) {
@@ -105,6 +144,9 @@ class HomePage extends React.Component {
         <br />
         <table className="teaching-group-table">
           <h3>All Tests:</h3>
+          <button onClick={this.handleCreateNewTest}>
+            New Test
+          </button>
           {testsAsHtml}
         </table>
       </div>

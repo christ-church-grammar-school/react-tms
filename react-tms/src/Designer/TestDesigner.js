@@ -147,11 +147,11 @@ class TestDesigner extends React.Component {
     console.log(`inside handleLoadNewQuestion(${newIdx})`);
     if (this.newQuestions.has(newIdx)) {
       this.setState({
-        questionStatement: '',
         testCases: [],
         unsaved: false,
         selectedIndex: newIdx,
       });
+      this.loadQuestionStatementText('');
     } else {
       // Load the question from the cloud storage.
       const questionTitle = `Question ${newIdx}`;
@@ -207,7 +207,6 @@ class TestDesigner extends React.Component {
             const idx = getNumFromFname(itemRef.name);
             response.text().then(text => {
               T.state.testCases[idx] = {...T.state.testCases[idx], output: text};
-              console.log('GOT OUTPUT TEXT:', text, "FOR IDX:", idx);
               console.log(T.state.testCases);
               this.forceUpdate();
             });
