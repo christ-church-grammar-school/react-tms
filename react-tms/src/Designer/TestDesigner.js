@@ -373,18 +373,28 @@ class TestDesigner extends React.Component {
               Delete
             </button>
           </div>
-          <TextareaAutosize className="TestCaseInput"
-                            placeholder="Input..."
-                            onChange={this.handleTestCaseInputChange(idx)}
-                            onResize={(e) => {}}
-                            value={testCase.input}>
-          </TextareaAutosize>
-          <TextareaAutosize className="TestCaseOutput"
-                            placeholder="Output..."
-                            onChange={this.handleTestCaseOutputChange(idx)}
-                            onResize={(e) => {}}
-                            value={testCase.output}>
-          </TextareaAutosize>
+          {testCase !== undefined &&
+            <TextareaAutosize className="TestCaseInput"
+                              placeholder="Input..."
+                              onChange={this.handleTestCaseInputChange(idx)}
+                              onResize={(e) => {}}
+                              value={testCase.input}>
+            </TextareaAutosize>
+          }
+          {testCase === undefined &&
+            <p>loading input...</p>
+          }
+          {testCase !== undefined &&
+            <TextareaAutosize className="TestCaseOutput"
+                              placeholder="Output..."
+                              onChange={this.handleTestCaseOutputChange(idx)}
+                              onResize={(e) => {}}
+                              value={testCase.output}>
+            </TextareaAutosize>
+          }
+          {testCase === undefined &&
+            <p>loading output...</p>
+          }
         </div>
       );
     }
