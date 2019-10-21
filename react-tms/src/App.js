@@ -5,6 +5,7 @@ import Header from './header/Header';
 import Login from './login/Login';
 import HomePage from './home/Home';
 import TestDesigner from './Designer/TestDesigner';
+import SubmissionView from './Submission/SubmissionView';
 import { withAuthentication } from './Session';
 import './App.css';
 
@@ -16,6 +17,7 @@ const App = () => (
         <Route exact path="/" component={HomePage} />
         <Route path="/login" component={Login} />
         <Route path="/designer/:testName" component={TestDesigner} />
+        <Route path="/submission/:group/:submissionID" component={SubmissionView} />
       </Switch>
     </BrowserRouter>
   </div>
