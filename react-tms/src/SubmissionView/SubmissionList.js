@@ -25,30 +25,29 @@ function loadDocument (firebase, path, id) {
   })
 }
 
-class SubmissionView extends React.Component {
+class SubmissionList extends React.Component {
   constructor(props) {
     super(props);
 
-    const {group, submissionID} = this.props.match.params;
+    const {group} = this.props.match.params;
 
     this.group = group;
-    this.submissionID = submissionID;
 
     this.state = {
       firebase: this.props.firebase,
     };
-    if (this.state.group) {
-      console.log(`Group: ${this.state.group}`)
+    if (this.group) {
+      console.log(`Group: ${this.group}`)
     } else {
       console.log('No group')
     }
 
     this.tests = {};
-    loadCollection(this.state.firebase, 'classes/10ASD1_2019/uploads').then((children) => {
+    loadCollection(this.state.firebase, `classes/${group}/uploads`).then((children) => {
       for (const idx in children) {
         const child = children[idx]
         const [student, test, number] = child.split('_');
-        loadDocument(this.state.firebase, 'classes/10ASD1_2019/uploads', child).then((data) => {
+        loadDocument(this.state.firebase, `classes/${group}/uploads`, child).then((data) => {
           if (!this.tests.hasOwnProperty(data.parent)) {
             this.tests[data.parent] = {};
           }
@@ -78,4 +77,4 @@ class SubmissionView extends React.Component {
 
 const condition = authUser => !!authUser;
 
-export default withAuthorization(condition)(SubmissionView);
+export default withAuthorization(condition)(SubmissionList);
