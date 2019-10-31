@@ -1,7 +1,7 @@
 import React from 'react';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {docco} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {xcode} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import {withAuthorization} from '../Session';
 
@@ -18,6 +18,29 @@ class SubmissionView extends React.Component {
     this.fileName = fileName;
 
     this.storagePath = `${this.group}/${this.student}/${this.submissionID}/${this.fileName}`;
+
+    this.fileType = undefined;
+    switch (this.fileName.split('.')[1]) {
+      case 'py':
+        this.fileType = 'python';
+        break;
+      case 'cs':
+        this.fileType = 'cs';
+        break;
+      case 'cc':
+      case 'cpp':
+        this.fileType = 'cpp';
+        break;
+      case 'go':
+        this.fileType = 'go';
+        break;
+      case 'js':
+        this.fileType = 'js';
+        break;
+      default:
+    }
+
+    console.log(this.fileType);
 
     this.state = {
       codeString: 'loading...',
@@ -46,27 +69,37 @@ class SubmissionView extends React.Component {
   render() {
     return (
       <div>
-        <h2>Submission View</h2>
-        <table>
+        <h2 className="PageTitle">
+          Submission View
+        </h2>
+        <table className="SubmissionInformation">
           <tbody>
             <tr>
-              <td>Group: </td>
+              <td className="CellBold">
+                Group:
+              </td>
               <td>{this.group}</td>
             </tr>
             <tr>
-              <td>Student: </td>
+              <td className="CellBold">
+                Student:
+              </td>
               <td>{this.student}</td>
             </tr>
             <tr>
-              <td>Submission ID:</td>
+              <td className="CellBold">
+                Submission ID:
+              </td>
               <td>{this.submissionID}</td>
             </tr>
           </tbody>
         </table>
 
-        <SyntaxHighlighter style={docco}>
-          {this.state.codeString}
-        </SyntaxHighlighter>
+        <div className="CodeView">
+          <SyntaxHighlighter language={this.fileType} style={xcode} showLineNumbers={true}>
+            {this.state.codeString}
+          </SyntaxHighlighter>
+        </div>
       </div>
     )
   }
