@@ -17,9 +17,30 @@ class SubmissionView extends React.Component {
     this.submissionID = submissionID;
     this.fileName = fileName;
 
+    this.storagePath = `${this.group}/${this.student}/${this.submissionID}/${this.fileName}`;
+
     this.state = {
       codeString: 'loading...',
     };
+  }
+
+  componentDidMount() {
+    const ref = this.props.firebase.getStorageRef(this.storagePath);
+    const T = this;
+    ref.getDownloadURL().then(url => {
+      fetch(url).then(response => {
+        response.text().then(text => {
+          T.setState({
+            codeString: text,
+          });
+        });
+      });
+    }).catch(error => {
+      alert(error.message);
+      T.setState({
+        codeString: error.message,
+      });
+    });
   }
 
   render() {
