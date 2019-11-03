@@ -5,8 +5,7 @@ import Header from './header/Header';
 import Login from './login/Login';
 import HomePage from './home/Home';
 import TestDesigner from './Designer/TestDesigner';
-// import SubmissionView from './Submission/SubmissionView';
-import SubmissionList from './SubmissionView/SubmissionList';
+import SubmissionList from './SubmissionList/SubmissionList';
 import { withAuthentication } from './Session';
 import './App.css';
 
