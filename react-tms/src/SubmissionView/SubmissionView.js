@@ -7,6 +7,29 @@ import {withAuthorization} from '../Session';
 
 import './SubmissionView.css';
 
+// Returns the type of a file given the file's extension.
+//
+// Args:
+//   extension: The file's extension.
+//
+function getFileTypeFromExtension(extension) {
+  switch (extension) {
+    case 'py':
+      return 'python';
+    case 'cs':
+      return 'cs';
+    case 'cc':
+    case 'cpp':
+      return 'cpp';
+    case 'go':
+      return 'go';
+    case 'js':
+      return 'js';
+    default:
+      return undefined;
+  }
+}
+
 class SubmissionView extends React.Component {
   constructor(props) {
     super(props);
@@ -19,28 +42,7 @@ class SubmissionView extends React.Component {
 
     this.storagePath = `${this.group}/${this.student}/${this.submissionID}/${this.fileName}`;
 
-    this.fileType = undefined;
-    switch (this.fileName.split('.')[1]) {
-      case 'py':
-        this.fileType = 'python';
-        break;
-      case 'cs':
-        this.fileType = 'cs';
-        break;
-      case 'cc':
-      case 'cpp':
-        this.fileType = 'cpp';
-        break;
-      case 'go':
-        this.fileType = 'go';
-        break;
-      case 'js':
-        this.fileType = 'js';
-        break;
-      default:
-    }
-
-    console.log(this.fileType);
+    this.fileType = getFileTypeFromExtension(this.fileName.split('.')[1]);
 
     this.state = {
       codeString: 'loading...',
