@@ -18,7 +18,9 @@ const App = () => (
         <Route exact path="/" component={HomePage} />
         <Route path="/login" component={Login} />
         <Route path="/designer/:testName" component={TestDesigner} />
-        <Route path="/submission/:group/:student/:submissionID/:fileName" component={SubmissionView} />
+        <Route path="/submission/:group/:student/:submissionID/:fileName"
+               component={SubmissionView} />
+        <Route path="/:group/submissions" component={SubmissionList} />
       </Switch>
     </BrowserRouter>
   </div>
