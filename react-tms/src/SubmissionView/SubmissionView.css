@@ -1,0 +1,36 @@
+h3 {
+  margin-left: 1em;
+  text-align: left;
+}
+
+.CellBold {
+  font-weight: bold;
+}
+
+.CodeView {
+  margin: 1em;
+  text-align: left;
+}
+
+.FeedbackEditor {
+  margin-left: 2em;
+  outline: none;
+  resize: none;
+  width: 100%;
+}
+
+.FeedbackEditorWrapper {
+  margin-top: 1em;
+  max-width: 40em;
+  text-align: left;
+}
+
+.PageTitle {
+  padding: 0.5em;
+}
+
+.SubmissionInformation {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}

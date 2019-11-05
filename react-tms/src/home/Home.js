@@ -105,7 +105,7 @@ class HomePage extends React.Component {
       for (const [idx, tgroup] of this.state.teachingGroups.entries()) {
         teachingGroupsAsHtml.push(
           <tr key={idx}>
-            <Link to={`/class/${tgroup}`}>
+            <Link to={`/${tgroup}/submissions`}>
               {tgroup}
             </Link>
           </tr>
