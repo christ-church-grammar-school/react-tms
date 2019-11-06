@@ -124,13 +124,10 @@ class TestDesigner extends React.Component {
   // Handles the selection of another question within the rendered list on the
   // sidebar.
   handleSelectNewQuestion(attemptedSelect) {
-    console.log(`inside handleSelectNewQuestion(${attemptedSelect});`);
     if (attemptedSelect !== this.state.selectedIndex) {
       // The user has selected a question other than the one they are currently
       // viewing.
-      console.log('Currently trying to select question', attemptedSelect);
       if (this.state.unsaved) {
-        console.log('Editor is unsaved!!!');
         if (window.confirm(UNSAVED_EDITOR_MESSAGE)) {
           this.handleLoadNewQuestion(attemptedSelect);
         } else {
@@ -145,7 +142,6 @@ class TestDesigner extends React.Component {
   // Handles the required loading of another question from the cloud firestore,
   // or alternatively the creation of a new question.
   handleLoadNewQuestion(newIdx) {
-    console.log(`inside handleLoadNewQuestion(${newIdx})`);
     if (this.newQuestions.has(newIdx)) {
       this.setState({
         testCases: [],
@@ -157,7 +153,6 @@ class TestDesigner extends React.Component {
       // Load the question from the cloud storage.
       const questionTitle = `Question ${newIdx}`;
       const testRef = this.props.firebase.getStorageRef(`tests/${this.testName}/${questionTitle}`);
-      console.log('Attempting to download!!!');
       this.handleGetTextFromFile(testRef);
       this.setState({
         selectedIndex: newIdx,
@@ -166,13 +161,9 @@ class TestDesigner extends React.Component {
   }
 
   handleGetTextFromFile(ref) {
-    console.log('Attempting to get text from file!');
-    console.log(ref.getDownloadURL());
-
     const T = this;
     ref.child('statement.txt').getDownloadURL().then(url => {
       fetch(url).then(response => {
-        console.log('RESPONDING...');
         response.text().then(text => {
           T.loadQuestionStatementText(text);
         });
@@ -180,9 +171,6 @@ class TestDesigner extends React.Component {
     });
 
     this.setState({testCases: []});
-    console.log('ABOUT TO LOG');
-    console.log(ref.child('inputs/').listAll());
-
     ref.child('inputs/').listAll().then(res => {
       res.items.forEach(itemRef => {
         const idx = getNumFromFname(itemRef.name);
@@ -190,7 +178,6 @@ class TestDesigner extends React.Component {
           fetch(url).then(response => {
             response.text().then(text => {
               T.state.testCases[idx] = {...T.state.testCases[idx], input: text};
-              console.log(this.state.testCases);
               this.forceUpdate();
             });
           });
@@ -204,11 +191,9 @@ class TestDesigner extends React.Component {
       res.items.forEach(itemRef => {
         itemRef.getDownloadURL().then(url => {
           fetch(url).then(response => {
-            console.log(itemRef);
             const idx = getNumFromFname(itemRef.name);
             response.text().then(text => {
               T.state.testCases[idx] = {...T.state.testCases[idx], output: text};
-              console.log(T.state.testCases);
               this.forceUpdate();
             });
           });
