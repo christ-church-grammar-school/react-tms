@@ -16,7 +16,7 @@ function loadCollection(firebase, path) {
       });
       resolve(children);
     });
-  })
+  });
 }
 
 function loadDocument(firebase, path, id) {
@@ -25,15 +25,14 @@ function loadDocument(firebase, path, id) {
   return new Promise((resolve, reject) => {
     ref.get().then((doc) => {
       resolve(doc.data());
-    })
-  })
+    });
+  });
 }
 
 class Submission extends React.Component {
   constructor(props) {
     super(props);
 
-    const time = this.props.time;
     const result = this.props.result;
     const graded = this.props.graded;
 
@@ -51,13 +50,16 @@ class Submission extends React.Component {
           {this.name}
         </Link>
       </li>
-    )
+    );
   }
 }
 
 class Student extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+    };
   }
 
   render() {
@@ -86,6 +88,9 @@ class Student extends React.Component {
 class Question extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+    };
   }
 
   render() {
@@ -105,13 +110,16 @@ class Question extends React.Component {
         {this.props.name}
         <ul>{students}</ul>
       </li>
-    )
+    );
   }
 }
 
 class Test extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+    };
   }
 
   render() {
@@ -121,7 +129,7 @@ class Test extends React.Component {
       if (obj.hasOwnProperty(question)) {
         questions.push(
           <Question name={question} obj={obj[question]} key={questions.length}></Question>
-        )
+        );
       }
     }
     return (

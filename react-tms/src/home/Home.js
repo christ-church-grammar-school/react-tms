@@ -53,8 +53,7 @@ class HomePage extends React.Component {
           teachingGroups: doc.data().classes,
         });
       } else {
-        console.error('Cloud Firestore document [' + `teachers/${teacherUid}` +
-                      '] does not exist.');
+        console.error(`Cloud Firestore document teachers/${teacherUid}'] does not exist.`);
         this.setState({
           loading: false,
           teachingGroups: ['An error was encountered.'],
