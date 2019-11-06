@@ -105,35 +105,39 @@ class HomePage extends React.Component {
       for (const [idx, tgroup] of this.state.teachingGroups.entries()) {
         teachingGroupsAsHtml.push(
           <tr key={idx}>
-            <Link to={`/${tgroup}/submissions`}>
-              {tgroup}
-            </Link>
+            <td>
+              <Link to={`/${tgroup}/submissions`}>
+                {tgroup}
+              </Link>
+            </td>
           </tr>
         );
       }
     } else {
-      teachingGroupsAsHtml = [<tr key={0}>loading...</tr>];
+      teachingGroupsAsHtml = [<tr key={0}><td>loading...</td></tr>];
     }
 
     var testsAsHtml = []
     if (this.state.loadingTestView) {
       testsAsHtml.push(
-        <tr key={0}>loading...</tr>
+        <tr key={0}><td>loading...</td></tr>
       );
     } else if (this.state.teachingGroups.length > 0) {
       for (const [idx, tName] of this.state.tests.entries()) {
         testsAsHtml.push(
           <tr key={idx}>
-            <Link to={`/designer/${tName}`}>
-              {tName}
-            </Link>
+            <td>
+              <Link to={`/designer/${tName}`}>
+                {tName}
+              </Link>
+            </td>
           </tr>
         )
       }
     } else {
       testsAsHtml.push(
-        <tr key={0}>No tests available.</tr>
-      )
+        <tr><td>No tests available.</td></tr>
+      );
     }
 
     return (
@@ -141,17 +145,21 @@ class HomePage extends React.Component {
         <h1>Dashboard</h1>
         <p>This page is only accessible by every signed in user.</p>
         <br />
+        <h3>Your Classes:</h3>
         <table className="teaching-group-table">
-          <h3>Your Classes:</h3>
-          {teachingGroupsAsHtml}
+          <tbody>
+            {teachingGroupsAsHtml}
+          </tbody>
         </table>
         <br />
+        <h3>All Tests:</h3>
+        <button onClick={this.handleCreateNewTest}>
+          New Test
+        </button>
         <table className="teaching-group-table">
-          <h3>All Tests:</h3>
-          <button onClick={this.handleCreateNewTest}>
-            New Test
-          </button>
-          {testsAsHtml}
+          <tbody>
+            {testsAsHtml}
+          </tbody>
         </table>
       </div>
     )
