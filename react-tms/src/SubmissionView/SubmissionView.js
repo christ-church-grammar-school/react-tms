@@ -189,14 +189,18 @@ class SubmissionView extends React.Component {
           </tbody>
         </table>
 
-        <h3>Code:</h3>
+        <h3 className="LeftView">
+          Code:
+        </h3>
         <div className="CodeView">
           <SyntaxHighlighter language={this.fileType} style={xcode} showLineNumbers={true}>
             {this.state.codeString}
           </SyntaxHighlighter>
         </div>
 
-        <h3>Submission Feedback:</h3>
+        <h3 className="LeftView">
+          Submission Feedback:
+        </h3>
         <button onClick={this.handleSaveFeedback}>
           Save Feedback
         </button>
