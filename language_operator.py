@@ -7,6 +7,12 @@ from __future__ import print_function
 
 import os
 import sys
+import logging
+import datetime
+
+logging.basicConfig(filename='.server.log',level=logging.DEBUG)
+logging.info('Started new logging session at {}'
+            .format(datetime.datetime.now()))
 
 from subprocess import Popen, PIPE
 
@@ -61,18 +67,16 @@ class Operator(object):
         self.cmd_run = self.cmd_run.replace(filename, 'FILE')
         self.cmd_run = self.cmd_run.replace(ext, 'EXT')
 
-    def run(self, filename, specified_input, specified_output):
+    def run(self, filename, specified_input):
         """Runs a file according to a certain test case.
 
-        A test case comprises specified input and output. The idea is that the
+        A test case comprises specified input. The idea is that the
         program is provided with the input, and must then output value(s)
-        according to the problem statement. If the program's output matches the
-        specified output, then the program passes the test case.
+        according to the problem statement.
 
         Args:
           filename: The name of the file to be run.
           specified_input: Specified input as described above.
-          specified_output: Specified output as described above.
 
         Returns:
           bool: True if no errors occurred and the program passes the test case
@@ -84,33 +88,27 @@ class Operator(object):
             if ext in self.extensions:
                 if self.cmd_cmpl:
                     self.replace(filename)
-                    print('COMPILATION COMMAND:', self.cmd_cmpl)
+                    logging.debug('Compilation command:', self.cmd_cmpl)
                     Popen(self.cmd_cmpl, shell=True).wait()
                     self.revert(filename)
 
                 self.replace(filename)
                 build = ''
                 build += self.cmd_run
-                print('BUILD COMMAND IS: {}'.format(build))
+                logging.debug('Build command: {}'.format(build))
                 process = Popen(build, shell=True, stdout=PIPE, stdin=PIPE,
                                 stderr=sys.stderr)
                 program_out = process.\
                     communicate(input=specified_input.encode())[0].decode()
-
-                specified_output = specified_output.strip()
                 program_out = program_out.strip()
 
-                if specified_output != program_out:
-                    print('INCORRECT RESPONSE: wanted [{}], but got [{}].'.
-                          format(repr(specified_output),
-                                 repr(program_out)))
-                    return False
+                return program_out
                 process.wait()
                 self.revert(filename)
             else:
-                print('ERROR: Extension not supported.', file=sys.stderr)
-                return False
+                logging.error('Extension not supported')
+                return None
         else:
-            print('ERROR: No specified file extension.', file=sys.stderr)
-            return False
-        return True
+            logging.error('No specified file extension')
+            return None
+        return None
